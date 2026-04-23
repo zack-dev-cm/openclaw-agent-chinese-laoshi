@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If this OpenClaw skill bundle is useful, cite the public release."
+title: "OpenClaw Chinese Laoshi"
+version: "1.0.9"
+date-released: "2026-04-23"
+authors:
+  - family-names: "Pashkin"
+    given-names: "Zakhar"
+repository-code: "https://github.com/zack-dev-cm/openclaw-agent-chinese-laoshi"
+url: "https://clawhub.ai/zack-dev-cm/openclaw-agent-chinese-laoshi"
+license: "MIT"

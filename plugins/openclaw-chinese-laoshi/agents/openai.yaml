@@ -1,0 +1,6 @@
+interface:
+  display_name: "OpenClaw Chinese Laoshi"
+  short_description: "Extract Chinese lesson assets, build tutor content, and block bad publishes with pilot-first review gates"
+  icon_small: "./assets/openclaw-chinese-laoshi-small.svg"
+  icon_large: "./assets/openclaw-chinese-laoshi-logo.svg"
+  default_prompt: "Use OpenClaw Chinese Laoshi to extract a lesson, build JSON and Markdown artifacts, and stop publication if the review gate finds leaks, slop, or undeclared auth."

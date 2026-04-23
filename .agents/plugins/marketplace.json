@@ -1,0 +1,20 @@
+{
+  "name": "zack-dev-cm-local",
+  "interface": {
+    "displayName": "Zack Local Plugins"
+  },
+  "plugins": [
+    {
+      "name": "openclaw-chinese-laoshi",
+      "source": {
+        "source": "local",
+        "path": "./plugins/openclaw-chinese-laoshi"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Education"
+    }
+  ]
+}

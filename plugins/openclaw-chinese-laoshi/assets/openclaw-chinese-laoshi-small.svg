@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="OpenClaw Chinese Laoshi icon">
+  <defs>
+    <linearGradient id="bg" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#F0C76B" />
+      <stop offset="100%" stop-color="#C75B2A" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="18" fill="url(#bg)" />
+  <path d="M18 18h18c5.523 0 10 4.477 10 10v16c0 1.105-.895 2-2 2H26l-8 7v-9c-2.209 0-4-1.791-4-4V22c0-2.209 1.791-4 4-4Z" fill="#FFF7E8" opacity="0.98" />
+  <path d="M27 24h10c1.105 0 2 .895 2 2v14H25V26c0-1.105.895-2 2-2Z" fill="#C75B2A" />
+  <path d="M25 28h14M25 33h14M25 38h9" stroke="#FFF7E8" stroke-linecap="round" stroke-width="2.4" />
+</svg>

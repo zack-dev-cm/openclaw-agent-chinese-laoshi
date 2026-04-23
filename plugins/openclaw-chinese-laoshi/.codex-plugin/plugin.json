@@ -1,0 +1,45 @@
+{
+  "name": "openclaw-chinese-laoshi",
+  "version": "1.0.9",
+  "description": "Normalize Chinese transcript assets, build teaching docs, and run pilot-first tutor workflows with strict publication review gates.",
+  "author": {
+    "name": "Zack",
+    "url": "https://github.com/zack-dev-cm"
+  },
+  "homepage": "https://github.com/zack-dev-cm/openclaw-agent-chinese-laoshi",
+  "repository": "https://github.com/zack-dev-cm/openclaw-agent-chinese-laoshi",
+  "license": "MIT",
+  "keywords": [
+    "openclaw",
+    "chinese",
+    "language-learning",
+    "lesson-normalization",
+    "teaching-plan",
+    "public-release-gates"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "OpenClaw Chinese Laoshi",
+    "shortDescription": "Normalize Chinese transcripts, build tutor artifacts, and block bad publishes with scoped review gates",
+    "longDescription": "Use OpenClaw Chinese Laoshi to turn transcript and subtitle drops into grounded raw transcripts, lesson JSON, learner-facing Markdown, local export bundles, and publication-safe public bundles for GitHub and ClawHub. The published skill avoids public API-key lanes and treats video-only extraction as a private source-repo workflow.",
+    "developerName": "Zack",
+    "category": "Education",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/zack-dev-cm/openclaw-agent-chinese-laoshi",
+    "privacyPolicyURL": "https://github.com/zack-dev-cm/openclaw-agent-chinese-laoshi/blob/main/plugins/openclaw-chinese-laoshi/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/zack-dev-cm/openclaw-agent-chinese-laoshi/blob/main/plugins/openclaw-chinese-laoshi/TERMS.md",
+    "defaultPrompt": [
+      "Extract lesson 01 into raw transcript, lesson JSON, and learner Markdown.",
+      "Review this course bundle for leaks, slop, and publish blockers.",
+      "Prepare local Drive-ready exports and study modes for the next approved lesson."
+    ],
+    "brandColor": "#C75B2A",
+    "composerIcon": "./assets/openclaw-chinese-laoshi-small.svg",
+    "logo": "./assets/openclaw-chinese-laoshi-logo.svg",
+    "screenshots": []
+  }
+}

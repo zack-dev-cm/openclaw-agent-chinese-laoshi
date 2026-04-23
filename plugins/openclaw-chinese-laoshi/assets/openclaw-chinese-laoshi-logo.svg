@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 120" role="img" aria-label="OpenClaw Chinese Laoshi logo">
+  <defs>
+    <linearGradient id="panel" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#F5D27D" />
+      <stop offset="100%" stop-color="#C75B2A" />
+    </linearGradient>
+  </defs>
+  <rect width="240" height="120" rx="28" fill="#F8F2E8" />
+  <rect x="16" y="16" width="88" height="88" rx="24" fill="url(#panel)" />
+  <path d="M34 36h26c8.837 0 16 7.163 16 16v19c0 1.657-1.343 3-3 3H48l-11 10V74c-4.418 0-8-3.582-8-8V41c0-2.761 2.239-5 5-5Z" fill="#FFF7E8" />
+  <path d="M49 44h14c1.657 0 3 1.343 3 3v21H46V47c0-1.657 1.343-3 3-3Z" fill="#C75B2A" />
+  <path d="M46 50h20M46 57h20M46 64h13" stroke="#FFF7E8" stroke-linecap="round" stroke-width="2.8" />
+  <text x="122" y="52" fill="#5B2B19" font-family="Georgia, 'Times New Roman', serif" font-size="24" font-weight="700">Chinese Laoshi</text>
+  <text x="122" y="80" fill="#8E4A29" font-family="Verdana, Arial, sans-serif" font-size="13">Pilot-first extraction and tutor ops</text>
+</svg>
