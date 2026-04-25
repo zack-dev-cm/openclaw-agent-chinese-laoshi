@@ -33,14 +33,14 @@ python3 scripts/check_publication_bundle.py
 ```bash
 git -C release/public-repo status --short
 git -C release/public-repo add -A
-git -C release/public-repo commit -m "Bundle public course data"
+git -C release/public-repo commit -m "Add ChatGPT connector guidance"
 git -C release/public-repo push origin main
 ```
 
 2. Tag the exact commit that passed the publication gate:
 
 ```bash
-git -C release/public-repo tag -a v1.0.11 -m "OpenClaw Chinese Laoshi v1.0.11"
+git -C release/public-repo tag -a v1.0.12 -m "OpenClaw Chinese Laoshi v1.0.12"
 git -C release/public-repo push origin main --tags
 ```
 
@@ -66,7 +66,7 @@ clawhub publish ./skills/openclaw-chinese-laoshi-ops --slug openclaw-agent-chine
 For the current release:
 
 ```bash
-clawhub publish ./skills/openclaw-chinese-laoshi-ops --slug openclaw-agent-chinese-laoshi --name "OpenClaw Chinese Laoshi Ops" --version 1.0.11 --changelog "Bundle sanitized lesson data, roleplay scenarios, and stricter publication gates." --tags latest,chinese,language-learning,drive
+clawhub publish ./skills/openclaw-chinese-laoshi-ops --slug openclaw-agent-chinese-laoshi --name "OpenClaw Chinese Laoshi Ops" --version 1.0.12 --changelog "Add ChatGPT connector guidance for prompt lookup and lesson roleplay routing." --tags latest,chinese,language-learning,drive
 ```
 
 ## Published Locations
@@ -92,6 +92,7 @@ Publication must stop if the gate detects:
 - known Drive file IDs
 - drift between the bundled plugin skill and the public skill copy
 - missing or incomplete public `references/course-data`
+- missing ChatGPT connector guidance or drift between skill copies
 - vague fallback authority when audited repository commands are missing
 - public-skill Drive, transcription, or vision lanes that ask for secrets,
   browser sessions, or cloud auth

@@ -100,6 +100,7 @@ SECRET_PATTERNS = [
 MIRRORED_FILES = [
     ("SKILL.md", "SKILL.md"),
     ("agents/openai.yaml", "agents/openai.yaml"),
+    ("references/chatgpt-connector-guidance.md", "references/chatgpt-connector-guidance.md"),
     ("references/pipeline.md", "references/pipeline.md"),
     ("references/release-gates.md", "references/release-gates.md"),
 ]

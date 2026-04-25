@@ -11,6 +11,7 @@ the installable skill. GitHub keeps the public source bundle and release tags.
 - Codex plugin: `plugins/openclaw-chinese-laoshi`
 - OpenClaw skill: `skills/openclaw-chinese-laoshi-ops`
 - Bundled public course data: `skills/openclaw-chinese-laoshi-ops/references/course-data`
+- ChatGPT connector guidance: `skills/openclaw-chinese-laoshi-ops/references/chatgpt-connector-guidance.md`
 - Publication gate: `scripts/check_publication_bundle.py`
 
 ## What It Does
@@ -19,6 +20,8 @@ the installable skill. GitHub keeps the public source bundle and release tags.
 - builds lesson JSON and learner-facing Markdown
 - ships sanitized lesson, lesson-plan, HSK practice, and roleplay data for the
   installable skill
+- guides ChatGPT/GitHub connector sessions to use the bundled lesson data
+  instead of unrelated repository search hits
 - builds local export bundles without assuming cloud credentials
 - enforces pilot-first review before scaling
 - blocks publication when the bundle contains slop, local-path bleed, or
@@ -52,7 +55,7 @@ clawhub publish ./skills/openclaw-chinese-laoshi-ops --slug openclaw-agent-chine
 
 Published page: https://clawhub.ai/zack-dev-cm/openclaw-agent-chinese-laoshi
 
-Current clean release: `v1.0.11` / `1.0.11`
+Current clean release: `v1.0.12` / `1.0.12`
 
 Reference:
 

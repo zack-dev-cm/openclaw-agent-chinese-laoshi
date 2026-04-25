@@ -1,7 +1,7 @@
 ---
 name: openclaw-agent-chinese-laoshi
 description: Use when studying or normalizing Chinese lesson transcript/subtitle inputs with bundled public lesson data, learner docs, local export bundles, and pilot-first prepublish leak gates.
-version: 1.0.11
+version: 1.0.12
 homepage: https://github.com/zack-dev-cm/openclaw-agent-chinese-laoshi
 user-invocable: true
 model-invocable: false
@@ -46,15 +46,17 @@ lesson schema, local command surface, and publication gate.
 
 1. If the user wants study help, inspect the bundled public course pack in
    `references/course-data` first and stay inside that data.
-2. If the user wants content creation, confirm the input is transcript or subtitle text. If the source is
+2. If the user is operating through ChatGPT or a GitHub connector, apply
+   `references/chatgpt-connector-guidance.md` before searching across repos.
+3. If the user wants content creation, confirm the input is transcript or subtitle text. If the source is
    video-only, stop and ask for transcript/subtitle input or for the user to
    switch to a private source-repo workflow.
-3. Inspect the checked-out repository docs, schemas, and command references
+4. Inspect the checked-out repository docs, schemas, and command references
    before proposing edits or commands.
-4. Move only one lesson at a time beyond scaffold state. Lesson 01 remains the
+5. Move only one lesson at a time beyond scaffold state. Lesson 01 remains the
    pilot gate before scaling.
-5. Build learner-facing artifacts only after grounded extraction exists.
-6. Run the repository's documented public release gate before GitHub or ClawHub
+6. Build learner-facing artifacts only after grounded extraction exists.
+7. Run the repository's documented public release gate before GitHub or ClawHub
    publication.
 
 If a matching audited command is absent, stop and ask for source-repo
@@ -138,5 +140,7 @@ services, inspect local credential stores, or continue with ad hoc extraction.
   - current lesson pipeline, state transitions, and repo command surfaces
 - `references/release-gates.md`
   - public publication checklist and leak/slop/bleed blockers
+- `references/chatgpt-connector-guidance.md`
+  - ChatGPT/GitHub connector routing rules for prompt lookup and roleplay start
 - `references/course-data`
   - sanitized lesson bundle, lesson plans, roleplays, and HSK-style practice

@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.0.12 - 2026-04-25
+
+- Added ChatGPT connector guidance so GitHub-connected sessions pin the correct
+  Chinese Laoshi repo before searching broadly.
+- Documented how to answer repo "system prompt" requests using visible prompt
+  artifacts without exposing hidden platform instructions.
+- Added roleplay-start checks that force ChatGPT sessions to read bundled
+  `references/course-data` before starting Chinese lesson practice.
+- Extended the publication gate to keep the standalone skill and plugin skill
+  connector guidance mirrored.
+
 ## v1.0.11 - 2026-04-25
 
 - Bundled sanitized public lesson data directly inside the published skill under
