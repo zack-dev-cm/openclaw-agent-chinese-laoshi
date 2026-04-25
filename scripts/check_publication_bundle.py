@@ -29,6 +29,7 @@ PLUGIN_MANIFEST_PATH = PLUGIN_ROOT / ".codex-plugin" / "plugin.json"
 README_PATH = BUNDLE_ROOT / "README.md"
 PUBLISHING_PATH = BUNDLE_ROOT / "PUBLISHING.md"
 CHANGELOG_PATH = BUNDLE_ROOT / "CHANGELOG.md"
+CITATION_PATH = BUNDLE_ROOT / "CITATION.cff"
 LICENSE_PATH = BUNDLE_ROOT / "LICENSE"
 REQUIRED_BUNDLE_FILES = [
     "README.md",
@@ -103,11 +104,58 @@ MIRRORED_FILES = [
     ("references/release-gates.md", "references/release-gates.md"),
 ]
 
+COURSE_DATA_ROOT_RELATIVE = Path("references/course-data")
+REQUIRED_COURSE_DATA_FILES = [
+    "README.md",
+    "course-index.md",
+    "lessons-bundle.json",
+    "lessons-bundle.md",
+    "hsk-training.json",
+    "roleplay-training.json",
+    "lesson-plans/README.md",
+    "hsk/README.md",
+    "roleplays/README.md",
+]
+
+BANNED_COURSE_DATA_JSON_KEYS = {
+    "drive_file_id",
+    "drive_title",
+    "drive_url",
+    "parent_folder_id",
+    "verified_via",
+    "source",
+    "source_name",
+    "source_url",
+    "source_title_ru",
+    "source_segment_indexes",
+    "official_title_ru",
+    "official_description_ru",
+    "editorial_expansion_note",
+    "confidence_notes",
+    "lesson_summary",
+    "focus_tags",
+    "editorial_status",
+    "transcript_status",
+    "translation_status",
+    "pinyin_status",
+    "review_status",
+    "review_snapshot",
+    "evidence_level",
+    "editorial_note",
+    "start_ms",
+    "end_ms",
+    "speaker_role",
+    "source_ru",
+    "uncertainty_notes",
+    "duration_seconds",
+    "metadata",
+}
+
 REQUIRED_SKILL_SAFETY_SNIPPETS = [
     "model-invocable: false",
     "disable-model-invocation: true",
     "No Google Drive cloud upload or direct Drive API access is declared or assumed by this published skill.",
-    "This published ClawHub skill is transcript/subtitle-input only.",
+    "This published ClawHub skill can use bundled public course data or transcript/subtitle inputs only.",
     "It does not request API keys, cloud transcription credentials, browser sessions, or Drive auth.",
     "This skill has no standalone runtime requirement and does not install code.",
     "Before executing any repository command, present the exact command and wait for explicit user confirmation",
@@ -139,6 +187,13 @@ def load_drive_ids(manifest_path: Path = MANIFEST_SOURCE_PATH) -> set[str]:
     return drive_ids
 
 
+def display_path(path: Path) -> str:
+    try:
+        return str(path.relative_to(ROOT))
+    except ValueError:
+        return str(path)
+
+
 def iter_text_files(root: Path) -> list[Path]:
     files: list[Path] = []
     for path in root.rglob("*"):
@@ -151,16 +206,30 @@ def collect_text_issues(path: Path, text: str, drive_ids: set[str]) -> list[str]
     issues: list[str] = []
     for pattern in PLACEHOLDER_PATTERNS:
         if pattern.search(text):
-            issues.append(f"{path.relative_to(ROOT)}: placeholder match `{pattern.pattern}`")
+            issues.append(f"{display_path(path)}: placeholder match `{pattern.pattern}`")
     for pattern in LEAK_PATTERNS:
         if pattern.search(text):
-            issues.append(f"{path.relative_to(ROOT)}: leak-prone match `{pattern.pattern}`")
+            issues.append(f"{display_path(path)}: leak-prone match `{pattern.pattern}`")
     for pattern in SECRET_PATTERNS:
         if pattern.search(text):
-            issues.append(f"{path.relative_to(ROOT)}: secret-shaped match `{pattern.pattern}`")
+            issues.append(f"{display_path(path)}: secret-shaped match `{pattern.pattern}`")
     for drive_id in sorted(drive_ids):
         if drive_id in text:
-            issues.append(f"{path.relative_to(ROOT)}: known Drive file id leaked: {drive_id}")
+            issues.append(f"{display_path(path)}: known Drive file id leaked: {drive_id}")
+    return issues
+
+
+def collect_json_key_issues(path: Path, value, parents: tuple[str, ...] = ()) -> list[str]:
+    issues: list[str] = []
+    if isinstance(value, dict):
+        for key, child in value.items():
+            child_path = parents + (str(key),)
+            if key in BANNED_COURSE_DATA_JSON_KEYS:
+                issues.append(f"{display_path(path)}: internal JSON key `{'.'.join(child_path)}`")
+            issues.extend(collect_json_key_issues(path, child, child_path))
+    elif isinstance(value, list):
+        for index, child in enumerate(value):
+            issues.extend(collect_json_key_issues(path, child, parents + (str(index),)))
     return issues
 
 
@@ -219,8 +288,6 @@ def validate_public_metadata() -> list[str]:
     changelog = CHANGELOG_PATH.read_text("utf8") if CHANGELOG_PATH.exists() else ""
     if "https://clawhub.ai/zack-dev-cm/openclaw-agent-chinese-laoshi" not in readme:
         issues.append(f"{README_PATH.relative_to(ROOT)}: missing ClawHub public page link")
-    if "Current clean release: `v1.0.9` / `1.0.9`" not in readme:
-        issues.append(f"{README_PATH.relative_to(ROOT)}: missing current clean release marker")
     if "Initial GitHub and ClawHub version" in readme:
         issues.append(f"{README_PATH.relative_to(ROOT)}: stale pre-cleanup version wording must not be published")
     if "https://clawhub.ai/zack-dev-cm/openclaw-chinese-laoshi" in readme:
@@ -235,8 +302,6 @@ def validate_public_metadata() -> list[str]:
         issues.append(f"{PUBLISHING_PATH.relative_to(ROOT)}: missing canonical ClawHub publish target")
     if "--tags latest,chinese,language-learning,drive" not in publishing:
         issues.append(f"{PUBLISHING_PATH.relative_to(ROOT)}: missing required ClawHub publish tags")
-    if "git tag -a v<semver>" not in publishing:
-        issues.append(f"{PUBLISHING_PATH.relative_to(ROOT)}: missing Git tag release step")
     if "gh repo edit zack-dev-cm/openclaw-agent-chinese-laoshi --homepage https://clawhub.ai/zack-dev-cm/openclaw-agent-chinese-laoshi" not in publishing:
         issues.append(f"{PUBLISHING_PATH.relative_to(ROOT)}: missing GitHub homepage linkage step")
     if re.search(r"^## v1\.0\.[0-8]\b", changelog, re.MULTILINE):
@@ -251,8 +316,59 @@ def parse_skill_metadata(skill_path: Path) -> dict:
     text = skill_path.read_text("utf8")
     for line in text.splitlines():
         if line.startswith("metadata: "):
-            return json.loads(line.removeprefix("metadata: ").strip())
+            return json.loads(line[len("metadata: "):].strip())
     return {}
+
+
+def parse_frontmatter_value(path: Path, key: str) -> str:
+    if not path.exists():
+        return ""
+    text = path.read_text("utf8")
+    match = re.search(rf"^{re.escape(key)}:\s*([^\n]+)", text, re.MULTILINE)
+    if not match:
+        return ""
+    return match.group(1).strip().strip('"').strip("'")
+
+
+def load_json_file(path: Path) -> dict:
+    if not path.exists():
+        return {}
+    return json.loads(path.read_text("utf8"))
+
+
+def validate_version_consistency() -> list[str]:
+    issues: list[str] = []
+    public_version = parse_frontmatter_value(PUBLIC_SKILL_ROOT / "SKILL.md", "version")
+    plugin_skill_version = parse_frontmatter_value(PLUGIN_SKILL_ROOT / "SKILL.md", "version")
+    plugin_manifest_version = load_json_file(PLUGIN_MANIFEST_PATH).get("version", "")
+    readme = README_PATH.read_text("utf8") if README_PATH.exists() else ""
+    publishing = PUBLISHING_PATH.read_text("utf8") if PUBLISHING_PATH.exists() else ""
+    changelog = CHANGELOG_PATH.read_text("utf8") if CHANGELOG_PATH.exists() else ""
+    citation = CITATION_PATH.read_text("utf8") if CITATION_PATH.exists() else ""
+
+    if not re.match(r"^\d+\.\d+\.\d+$", public_version or ""):
+        issues.append(f"{PUBLIC_SKILL_ROOT.relative_to(ROOT)}/SKILL.md: missing valid semver version")
+        return issues
+
+    for label, value in [
+        ("plugin skill", plugin_skill_version),
+        ("plugin manifest", plugin_manifest_version),
+    ]:
+        if value != public_version:
+            issues.append(f"{label} version `{value}` does not match public skill version `{public_version}`")
+
+    if f"Current clean release: `v{public_version}` / `{public_version}`" not in readme:
+        issues.append(f"{README_PATH.relative_to(ROOT)}: missing current clean release marker for {public_version}")
+    if not re.search(rf"^## v{re.escape(public_version)}\b", changelog, re.MULTILINE):
+        issues.append(f"{CHANGELOG_PATH.relative_to(ROOT)}: missing changelog heading for v{public_version}")
+    if f'version: "{public_version}"' not in citation:
+        issues.append(f"{CITATION_PATH.relative_to(ROOT)}: citation version does not match {public_version}")
+    if f"--version {public_version}" not in publishing:
+        issues.append(f"{PUBLISHING_PATH.relative_to(ROOT)}: missing exact ClawHub publish version {public_version}")
+    if f"git -C release/public-repo tag -a v{public_version}" not in publishing:
+        issues.append(f"{PUBLISHING_PATH.relative_to(ROOT)}: missing bundle-root tag command for v{public_version}")
+
+    return issues
 
 
 def validate_skill_release_safety() -> list[str]:
@@ -297,6 +413,99 @@ def validate_mirrors() -> list[str]:
     return issues
 
 
+def relative_file_set(root: Path) -> set[str]:
+    if not root.exists():
+        return set()
+    return {
+        str(path.relative_to(root))
+        for path in root.rglob("*")
+        if path.is_file()
+    }
+
+
+def expected_course_data_files() -> set[str]:
+    expected = set(REQUIRED_COURSE_DATA_FILES)
+    expected.update(f"lesson-plans/lesson-{number:02d}.md" for number in range(1, 17))
+    expected.update(f"hsk/lesson-{number:02d}.json" for number in range(1, 17))
+    expected.update(f"roleplays/lesson-{number:02d}.json" for number in range(1, 17))
+    return expected
+
+
+def validate_course_data_root(root: Path, drive_ids: set[str]) -> list[str]:
+    issues: list[str] = []
+    if not root.exists():
+        return [f"missing bundled course data: {display_path(root)}"]
+
+    expected_files = expected_course_data_files()
+    actual_files = relative_file_set(root)
+    missing_files = sorted(expected_files - actual_files)
+    unexpected_files = sorted(actual_files - expected_files)
+    for relative in missing_files:
+        issues.append(f"missing bundled course data file: {display_path(root / relative)}")
+    for relative in unexpected_files:
+        issues.append(f"unexpected bundled course data file: {display_path(root / relative)}")
+
+    for relative in sorted(actual_files):
+        path = root / relative
+        if path.suffix.lower() not in {".json", ".md"}:
+            issues.append(f"{display_path(path)}: unsupported course-data file type")
+        if path.stat().st_size > 2_000_000:
+            issues.append(f"{display_path(path)}: course-data file is unexpectedly large")
+
+    expected_counts = [
+        ("lesson-plans/lesson-*.md", 16),
+        ("hsk/lesson-*.json", 16),
+        ("roleplays/lesson-*.json", 16),
+    ]
+    for pattern, expected in expected_counts:
+        count = len(list(root.glob(pattern)))
+        if count != expected:
+            issues.append(f"{display_path(root)} expected {expected} files for {pattern}, found {count}")
+
+    lesson_bundle_path = root / "lessons-bundle.json"
+    if lesson_bundle_path.exists():
+        try:
+            payload = json.loads(lesson_bundle_path.read_text("utf8"))
+        except json.JSONDecodeError as error:
+            issues.append(f"{display_path(lesson_bundle_path)}: invalid JSON: {error}")
+        else:
+            lessons = payload.get("lessons")
+            if not isinstance(lessons, list) or len(lessons) != 16:
+                issues.append(f"{display_path(lesson_bundle_path)}: expected 16 public lessons")
+
+    for path in iter_text_files(root):
+        text = path.read_text("utf8")
+        issues.extend(collect_text_issues(path, text, drive_ids))
+        if path.suffix.lower() == ".json":
+            try:
+                issues.extend(collect_json_key_issues(path, json.loads(text)))
+            except json.JSONDecodeError as error:
+                issues.append(f"{display_path(path)}: invalid JSON: {error}")
+
+    return issues
+
+
+def validate_course_data_bundle(drive_ids: set[str]) -> list[str]:
+    issues: list[str] = []
+    public_root = PUBLIC_SKILL_ROOT / COURSE_DATA_ROOT_RELATIVE
+    plugin_root = PLUGIN_SKILL_ROOT / COURSE_DATA_ROOT_RELATIVE
+
+    issues.extend(validate_course_data_root(public_root, drive_ids))
+    issues.extend(validate_course_data_root(plugin_root, drive_ids))
+
+    public_files = relative_file_set(public_root)
+    plugin_files = relative_file_set(plugin_root)
+    if public_files != plugin_files:
+        issues.append("public and plugin course-data file lists drift")
+    for relative in sorted(public_files & plugin_files):
+        public_path = public_root / relative
+        plugin_path = plugin_root / relative
+        if public_path.read_bytes() != plugin_path.read_bytes():
+            issues.append(f"course-data mirror drift: {public_path.relative_to(ROOT)} != {plugin_path.relative_to(ROOT)}")
+
+    return issues
+
+
 def main() -> int:
     issues: list[str] = []
     drive_ids = load_drive_ids()
@@ -337,7 +546,9 @@ def main() -> int:
         issues.extend(validate_marketplace_manifest())
 
     issues.extend(validate_public_metadata())
+    issues.extend(validate_version_consistency())
     issues.extend(validate_mirrors())
+    issues.extend(validate_course_data_bundle(drive_ids))
     issues.extend(validate_skill_release_safety())
 
     if issues:

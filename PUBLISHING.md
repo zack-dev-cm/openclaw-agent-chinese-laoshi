@@ -2,6 +2,9 @@
 
 This bundle is the public release surface. It intentionally excludes internal
 lesson manifests, local Drive mount traces, and operator-only working docs.
+It must include sanitized public course data under
+`skills/openclaw-chinese-laoshi-ops/references/course-data` so the published
+ClawHub skill can answer lesson-study requests without private repo access.
 
 ## Build
 
@@ -25,12 +28,20 @@ python3 scripts/check_publication_bundle.py
 
 ## Publish
 
-1. Push the contents of `release/public-repo` to a public GitHub repository.
+1. Push the contents of `release/public-repo` to a public GitHub repository:
+
+```bash
+git -C release/public-repo status --short
+git -C release/public-repo add -A
+git -C release/public-repo commit -m "Bundle public course data"
+git -C release/public-repo push origin main
+```
+
 2. Tag the exact commit that passed the publication gate:
 
 ```bash
-git tag -a v<semver> -m "OpenClaw Chinese Laoshi v<semver>"
-git push origin main --tags
+git -C release/public-repo tag -a v1.0.11 -m "OpenClaw Chinese Laoshi v1.0.11"
+git -C release/public-repo push origin main --tags
 ```
 
 3. Set the GitHub repository homepage to the ClawHub skill page so catalog
@@ -50,6 +61,12 @@ gh repo edit zack-dev-cm/openclaw-agent-chinese-laoshi --add-topic openclaw --ad
 
 ```bash
 clawhub publish ./skills/openclaw-chinese-laoshi-ops --slug openclaw-agent-chinese-laoshi --name "OpenClaw Chinese Laoshi Ops" --version <semver> --changelog "<text>" --tags latest,chinese,language-learning,drive
+```
+
+For the current release:
+
+```bash
+clawhub publish ./skills/openclaw-chinese-laoshi-ops --slug openclaw-agent-chinese-laoshi --name "OpenClaw Chinese Laoshi Ops" --version 1.0.11 --changelog "Bundle sanitized lesson data, roleplay scenarios, and stricter publication gates." --tags latest,chinese,language-learning,drive
 ```
 
 ## Published Locations
@@ -74,6 +91,7 @@ Publication must stop if the gate detects:
 - secret-shaped strings
 - known Drive file IDs
 - drift between the bundled plugin skill and the public skill copy
+- missing or incomplete public `references/course-data`
 - vague fallback authority when audited repository commands are missing
 - public-skill Drive, transcription, or vision lanes that ask for secrets,
   browser sessions, or cloud auth

@@ -20,6 +20,7 @@ Source:
   inline passwords
 - known Drive file IDs copied from the project manifests
 - drift between the public skill copy and the bundled plugin copy
+- missing or incomplete `references/course-data` in either skill copy
 - vague fallback authority when audited repository commands are missing
 - public-skill Drive, transcription, or vision lanes that ask for secrets,
   browser sessions, or cloud auth
@@ -31,3 +32,5 @@ Source:
 - Run the checked-out repository's documented publication gate before release.
 - Do not publish if the gate fails or if no audited publication gate is
   documented for the public bundle.
+- Do not publish if the standalone public skill and plugin skill carry different
+  course data files or byte-different course data.

@@ -1,6 +1,6 @@
 {
   "name": "openclaw-chinese-laoshi",
-  "version": "1.0.9",
+  "version": "1.0.11",
   "description": "Normalize Chinese transcript assets, build teaching docs, and run pilot-first tutor workflows with strict publication review gates.",
   "author": {
     "name": "Zack",
