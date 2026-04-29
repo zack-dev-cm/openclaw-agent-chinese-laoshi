@@ -1,7 +1,7 @@
 ---
 name: openclaw-agent-chinese-laoshi
 description: Use when studying or normalizing Chinese lesson transcript/subtitle inputs with bundled public lesson data, learner docs, local export bundles, and pilot-first prepublish leak gates.
-version: 1.0.12
+version: 1.0.13
 homepage: https://github.com/zack-dev-cm/openclaw-agent-chinese-laoshi
 user-invocable: true
 model-invocable: false
@@ -21,6 +21,7 @@ lesson schema, local command surface, and publication gate.
 - the user wants to study from the bundled public lesson pack
 - the user wants lesson summaries, conspects, vocabulary, grammar, drills, or tests
 - the user wants roleplay scenarios, daily sprints, or HSK-style practice based on the bundled lesson data
+- the user asks for visible public tutor prompt artifacts or platform prompt packs
 - the user wants Markdown and JSON lesson assets prepared as local export bundles
 - the user wants to package or publish the workflow without leaking local paths,
   known Drive IDs, or secret-shaped text
@@ -48,15 +49,17 @@ lesson schema, local command surface, and publication gate.
    `references/course-data` first and stay inside that data.
 2. If the user is operating through ChatGPT or a GitHub connector, apply
    `references/chatgpt-connector-guidance.md` before searching across repos.
-3. If the user wants content creation, confirm the input is transcript or subtitle text. If the source is
+3. If the user asks for visible tutor prompts, cite only public artifacts from
+   `references/system-prompts` or the public repo's `prompts/system` directory.
+4. If the user wants content creation, confirm the input is transcript or subtitle text. If the source is
    video-only, stop and ask for transcript/subtitle input or for the user to
    switch to a private source-repo workflow.
-4. Inspect the checked-out repository docs, schemas, and command references
+5. Inspect the checked-out repository docs, schemas, and command references
    before proposing edits or commands.
-5. Move only one lesson at a time beyond scaffold state. Lesson 01 remains the
+6. Move only one lesson at a time beyond scaffold state. Lesson 01 remains the
    pilot gate before scaling.
-6. Build learner-facing artifacts only after grounded extraction exists.
-7. Run the repository's documented public release gate before GitHub or ClawHub
+7. Build learner-facing artifacts only after grounded extraction exists.
+8. Run the repository's documented public release gate before GitHub or ClawHub
    publication.
 
 If a matching audited command is absent, stop and ask for source-repo
@@ -119,6 +122,9 @@ services, inspect local credential stores, or continue with ad hoc extraction.
   IDs.
 - The gate must also fail if bundled `references/course-data` is missing,
   incomplete, or different between the standalone public skill and plugin skill.
+- The gate must also fail if public tutor prompt artifacts are missing from
+  `references/system-prompts`, missing from the public repo `prompts/system`
+  surface, or drift between standalone and plugin copies.
 
 ## Do Not
 
@@ -142,5 +148,7 @@ services, inspect local credential stores, or continue with ad hoc extraction.
   - public publication checklist and leak/slop/bleed blockers
 - `references/chatgpt-connector-guidance.md`
   - ChatGPT/GitHub connector routing rules for prompt lookup and roleplay start
+- `references/system-prompts`
+  - public tutor prompt packs and shared runtime correction contract
 - `references/course-data`
   - sanitized lesson bundle, lesson plans, roleplays, and HSK-style practice

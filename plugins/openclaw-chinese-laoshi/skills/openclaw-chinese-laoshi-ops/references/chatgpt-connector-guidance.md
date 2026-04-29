@@ -26,7 +26,11 @@ Useful shipped artifacts:
 - `references/chatgpt-connector-guidance.md`
 - `references/pipeline.md`
 - `references/release-gates.md`
+- `references/system-prompts/README.md`
+- `references/system-prompts/shared-runtime-contract.md`
+- `references/system-prompts/chatgpt-guided-learning.md`
 - `references/course-data`
+- public GitHub checkout only: `prompts/system`
 
 ## Lesson And Roleplay Data
 

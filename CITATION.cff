@@ -1,8 +1,8 @@
 cff-version: 1.2.0
 message: "If this OpenClaw skill bundle is useful, cite the public release."
 title: "OpenClaw Chinese Laoshi"
-version: "1.0.12"
-date-released: "2026-04-25"
+version: "1.0.13"
+date-released: "2026-04-29"
 authors:
   - family-names: "Pashkin"
     given-names: "Zakhar"

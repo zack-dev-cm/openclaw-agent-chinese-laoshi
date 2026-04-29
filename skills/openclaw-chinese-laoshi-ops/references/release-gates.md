@@ -21,6 +21,8 @@ Source:
 - known Drive file IDs copied from the project manifests
 - drift between the public skill copy and the bundled plugin copy
 - missing or incomplete `references/course-data` in either skill copy
+- missing or drifted public system prompts in `prompts/system` or
+  `references/system-prompts`
 - vague fallback authority when audited repository commands are missing
 - public-skill Drive, transcription, or vision lanes that ask for secrets,
   browser sessions, or cloud auth
@@ -34,3 +36,5 @@ Source:
   documented for the public bundle.
 - Do not publish if the standalone public skill and plugin skill carry different
   course data files or byte-different course data.
+- Do not publish if the public repo prompt pack and the skill prompt mirrors
+  carry different file lists or byte-different prompt files.

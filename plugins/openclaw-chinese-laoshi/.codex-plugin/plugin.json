@@ -1,7 +1,7 @@
 {
   "name": "openclaw-chinese-laoshi",
-  "version": "1.0.12",
-  "description": "Normalize Chinese transcript assets, build teaching docs, and run pilot-first tutor workflows with strict publication review gates.",
+  "version": "1.0.13",
+  "description": "Normalize Chinese transcript assets, build teaching docs and public prompt packs, and run pilot-first tutor workflows with strict publication review gates.",
   "author": {
     "name": "Zack",
     "url": "https://github.com/zack-dev-cm"
@@ -21,7 +21,7 @@
   "interface": {
     "displayName": "OpenClaw Chinese Laoshi",
     "shortDescription": "Normalize Chinese transcripts, build tutor artifacts, and block bad publishes with scoped review gates",
-    "longDescription": "Use OpenClaw Chinese Laoshi to turn transcript and subtitle drops into grounded raw transcripts, lesson JSON, learner-facing Markdown, local export bundles, and publication-safe public bundles for GitHub and ClawHub. The published skill avoids public API-key lanes and treats video-only extraction as a private source-repo workflow.",
+    "longDescription": "Use OpenClaw Chinese Laoshi to turn transcript and subtitle drops into grounded raw transcripts, lesson JSON, learner-facing Markdown, public tutor prompt packs, local export bundles, and publication-safe public bundles for GitHub and ClawHub. The published skill avoids public API-key lanes and treats video-only extraction as a private source-repo workflow.",
     "developerName": "Zack",
     "category": "Education",
     "capabilities": [

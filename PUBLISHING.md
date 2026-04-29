@@ -5,6 +5,9 @@ lesson manifests, local Drive mount traces, and operator-only working docs.
 It must include sanitized public course data under
 `skills/openclaw-chinese-laoshi-ops/references/course-data` so the published
 ClawHub skill can answer lesson-study requests without private repo access.
+It must also include public tutor prompt artifacts under `prompts/system` and
+the published skill mirror
+`skills/openclaw-chinese-laoshi-ops/references/system-prompts`.
 
 ## Build
 
@@ -33,14 +36,14 @@ python3 scripts/check_publication_bundle.py
 ```bash
 git -C release/public-repo status --short
 git -C release/public-repo add -A
-git -C release/public-repo commit -m "Add ChatGPT connector guidance"
+git -C release/public-repo commit -m "Publish public system prompts"
 git -C release/public-repo push origin main
 ```
 
 2. Tag the exact commit that passed the publication gate:
 
 ```bash
-git -C release/public-repo tag -a v1.0.12 -m "OpenClaw Chinese Laoshi v1.0.12"
+git -C release/public-repo tag -a v1.0.13 -m "OpenClaw Chinese Laoshi v1.0.13"
 git -C release/public-repo push origin main --tags
 ```
 
@@ -66,7 +69,7 @@ clawhub publish ./skills/openclaw-chinese-laoshi-ops --slug openclaw-agent-chine
 For the current release:
 
 ```bash
-clawhub publish ./skills/openclaw-chinese-laoshi-ops --slug openclaw-agent-chinese-laoshi --name "OpenClaw Chinese Laoshi Ops" --version 1.0.12 --changelog "Add ChatGPT connector guidance for prompt lookup and lesson roleplay routing." --tags latest,chinese,language-learning,drive
+clawhub publish ./skills/openclaw-chinese-laoshi-ops --slug openclaw-agent-chinese-laoshi --name "OpenClaw Chinese Laoshi Ops" --version 1.0.13 --changelog "Publish system prompt packs and harden tutor correction, pacing, pinyin, and instruction-bleed rules." --tags latest,chinese,language-learning,drive
 ```
 
 ## Published Locations
@@ -92,6 +95,7 @@ Publication must stop if the gate detects:
 - known Drive file IDs
 - drift between the bundled plugin skill and the public skill copy
 - missing or incomplete public `references/course-data`
+- missing or drifted public `prompts/system` or `references/system-prompts`
 - missing ChatGPT connector guidance or drift between skill copies
 - vague fallback authority when audited repository commands are missing
 - public-skill Drive, transcription, or vision lanes that ask for secrets,

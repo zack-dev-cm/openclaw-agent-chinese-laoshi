@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.0.13 - 2026-04-29
+
+- Published the platform system prompt pack in the public GitHub bundle and
+  mirrored it into the ClawHub skill references.
+- Added a shared tutor runtime contract for correction status, pacing limits,
+  pinyin normalization, transcript-only pronunciation boundaries, and
+  instruction-bleed handling.
+- Extended the publication gate to fail when system prompt files are missing,
+  drift between public and skill copies, or lose required anti-slop wording.
+
 ## v1.0.12 - 2026-04-25
 
 - Added ChatGPT connector guidance so GitHub-connected sessions pin the correct
